@@ -505,9 +505,12 @@ public class GetEmpDetailsService {
 	                FamilyDetailsResponseDTO dto = new FamilyDetailsResponseDTO();
 	                
 	                // Map family member details
-	                String fullName = familyDetail.getFirst_name() + (familyDetail.getLast_name() != null ? " " + familyDetail.getLast_name() : "");
-	                dto.setName(fullName);
+//	                String fullName = familyDetail.getFirst_name() + (familyDetail.getLast_name() != null ? " " + familyDetail.getLast_name() : "");
+//	                dto.setName(fullName);
 	                
+	                
+	                dto.setName(familyDetail.getFullName());
+	                dto.setAdhaarNo(familyDetail.getAdhaarNo());
 	                // Assuming required getters exist on related entities
 	                dto.setRelation(familyDetail.getRelation_id().getStudentRelationType());
 	                dto.setBloodGroup(familyDetail.getBlood_group_id().getBloodGroupName());

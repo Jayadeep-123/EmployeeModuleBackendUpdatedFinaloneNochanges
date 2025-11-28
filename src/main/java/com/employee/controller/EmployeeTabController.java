@@ -18,6 +18,8 @@ import com.employee.dto.DocumentDTO;
 import com.employee.dto.FamilyInfoDTO;
 import com.employee.dto.PreviousEmployerInfoDTO;
 import com.employee.dto.QualificationDTO;
+import com.employee.dto.SalaryInfoDTO;
+import com.employee.service.EmpSalaryInfoService;
 import com.employee.service.EmployeeBasicInfoTabService;
 import com.employee.service.EmployeeRemainingTabService;
 
@@ -40,6 +42,9 @@ public class EmployeeTabController {
 
     @Autowired
     private EmployeeRemainingTabService employeeRemainingTabService;
+    
+    @Autowired
+	private EmpSalaryInfoService empSalaryInfoService;
 
     /**
      * API 1: Save Basic Info (Tab 1)
@@ -182,5 +187,11 @@ public class EmployeeTabController {
         AgreementInfoDTO response = employeeRemainingTabService.saveAgreementInfo(tempPayrollId, agreementInfo);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    
+    @PostMapping("/forward-to-central-office")
+	public ResponseEntity<SalaryInfoDTO> forwardToCentralOffice(@RequestBody SalaryInfoDTO salaryInfoDTO) {
+		SalaryInfoDTO result = empSalaryInfoService.forwardToCentralOffice(salaryInfoDTO);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }
 

@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmpFamilyDetailsDTO {
     private int empFamilyDetlId;
-    private String firstName;
-    private String lastName;
+    private String fullName;
+    private Long adhaarNo;
     private String occupation;
     private String gender;
     private String bloodGroup;

@@ -34,11 +34,17 @@ public class EmpFamilyDetails {
 	
 	private Date date_of_birth; // Nullable
 	
-	@Column(name = "first_name", nullable = false)
-	private String first_name; // Required NOT NULL
+//	@Column(name = "first_name", nullable = false)
+//	private String first_name; // Required NOT NULL
+//	
+//	@Column(name = "last_name", nullable = false)
+//	private String last_name; // Required NOT NULL
 	
-	@Column(name = "last_name", nullable = false)
-	private String last_name; // Required NOT NULL
+	@Column(name = "full_name", length = 100)
+    private String fullName;
+	
+	@Column(name = "adhaar_no") // Note: Matches your SQL spelling "adhaar"
+    private Long adhaarNo;
 	
 	@Column(name = "occupation", nullable = false)
 	private String occupation; // Required NOT NULL

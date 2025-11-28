@@ -17,7 +17,7 @@ public class FamilyDetailsResponseDTO {
     private String occupation; // e.g., "IT Job"
     private String emailId; // e.g., "Design@varsitymgmt.com"
     private Long phoneNumber; // e.g., +919876543210
- 
+    private Long adhaarNo;
     // Address Details (derived from EmpaddressInfo)
     private String state; // e.g., "Telangana"
     private String country; // e.g., "India"

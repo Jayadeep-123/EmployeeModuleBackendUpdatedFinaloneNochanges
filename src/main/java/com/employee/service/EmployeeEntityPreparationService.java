@@ -274,7 +274,7 @@ public class EmployeeEntityPreparationService {
         } else {
             empDetails.setRelation_id(null);
         }
-        empDetails.setAdhaar_no(basicInfo.getAadharNum());
+        empDetails.setAdhaar_no(basicInfo.getAdhaarNo());
         empDetails.setPancard_no(basicInfo.getPancardNum());
         empDetails.setAdhaar_enrolment_no(basicInfo.getAadharEnrolmentNum());
         empDetails.setPassout_year(0);

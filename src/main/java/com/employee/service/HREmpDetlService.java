@@ -98,8 +98,10 @@ public class HREmpDetlService {
         return familyList.stream().map(fam -> {
             EmpFamilyDetailsDTO dto = new EmpFamilyDetailsDTO();
             dto.setEmpFamilyDetlId(fam.getEmp_family_detl_id());
-            dto.setFirstName(fam.getFirst_name());
-            dto.setLastName(fam.getLast_name());
+//            dto.setFirstName(fam.getFirst_name());
+//            dto.setLastName(fam.getLast_name());
+            dto.setFullName(fam.getFullName());
+            dto.setAdhaarNo(fam.getAdhaarNo());
             dto.setOccupation(fam.getOccupation());
             dto.setGender(fam.getGender_id().getGenderName());
             dto.setBloodGroup(fam.getBlood_group_id().getBloodGroupName());

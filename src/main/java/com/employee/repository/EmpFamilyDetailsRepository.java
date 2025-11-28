@@ -132,13 +132,13 @@ import com.employee.entity.Employee;
 public interface EmpFamilyDetailsRepository extends JpaRepository<EmpFamilyDetails, Integer> {
  
     /**
-     * --- FIX ---
-     * 1. Replaced the hardcoded 'fd.is_active = 1' with a dynamic ':isActive' parameter.
-     * 2. This query now correctly uses Java field names (is_active, studentRelationType, etc.)
+     * --- FIXED QUERY ---
+     * 1. Removed CONCAT(first_name, last_name) because those fields don't exist anymore.
+     * 2. Used 'fd.fullName' instead.
      */
     @Query("SELECT NEW com.employee.dto.FamilyDetailsDTO(" +
            "rel.studentRelationType, " +  
-           "CONCAT(fd.first_name, ' ', fd.last_name), " + 
+           "fd.fullName, " +       // <--- FIXED: Use direct fullName field
            "bg.bloodGroupName, " +
            "g.genderName, " +
            "fd.nationality, " +    
@@ -149,55 +149,46 @@ public interface EmpFamilyDetailsRepository extends JpaRepository<EmpFamilyDetai
            "LEFT JOIN fd.relation_id rel " +
            "LEFT JOIN fd.blood_group_id bg " +
            "LEFT JOIN fd.gender_id g " +
-           "WHERE fd.emp_id.tempPayrollId = :payrollId AND fd.is_active = :isActive") // <-- FIXED
+           "WHERE fd.emp_id.tempPayrollId = :payrollId AND fd.is_active = :isActive")
     List<FamilyDetailsDTO> findFamilyDetailsByPayrollId(
             @Param("payrollId") String payrollId, 
-            @Param("isActive") int isActive); // <-- Added this parameter
- 
-    
-    /**
-     * This query is correct and matches your DTO.
-     */
-    @Query("""
-            SELECT new com.employee.dto.EmpFamilyDetailsDTO(
-                e.emp_family_detl_id,
-                e.first_name,
-                e.last_name,
-                e.occupation,
-                g.genderName,
-                b.bloodGroupName,
-                e.nationality,
-                r.studentRelationType,
-                e.is_dependent,
-                e.is_late,
-                e.email,
-                e.contact_no
-            )
-            FROM EmpFamilyDetails e
-            JOIN e.gender_id g
-            JOIN e.blood_group_id b
-            JOIN e.relation_id r
-            WHERE e.emp_id.emp_id=:emp_id
-        """)
-    List<EmpFamilyDetailsDTO> findFamilyDetailsByEmpId(@Param("emp_id") int empId);
+            @Param("isActive") int isActive);
  
     
     /**
      * This query is correct.
      */
+    @Query("""
+    	    SELECT new com.employee.dto.EmpFamilyDetailsDTO(
+    	        e.emp_family_detl_id,
+    	        e.fullName,          
+    	        e.adhaarNo,          
+    	        e.occupation,
+    	        g.genderName,
+    	        b.bloodGroupName,
+    	        e.nationality,
+    	        r.studentRelationType,
+    	        e.is_dependent,
+    	        e.is_late,
+    	        e.email,
+    	        e.contact_no
+    	    )
+    	    FROM EmpFamilyDetails e
+    	    JOIN e.gender_id g
+    	    JOIN e.blood_group_id b
+    	    JOIN e.relation_id r
+    	    WHERE e.emp_id.emp_id=:emp_id
+    	""")
+    	List<EmpFamilyDetailsDTO> findFamilyDetailsByEmpId(@Param("emp_id") int empId);
+    
     @Query("SELECT fd FROM EmpFamilyDetails fd WHERE fd.emp_id.payRollId = :payrollId AND fd.is_active = :isActive")
     List<EmpFamilyDetails> findByEmp_id_PayrollIdAndIsActive(
             @Param("payrollId") String payrollId, 
             @Param("isActive") int isActive);
-    /**
-     * This query is correct.
-     */
+
     @Query("SELECT fd FROM EmpFamilyDetails fd WHERE fd.emp_id.emp_id = :empId")
     List<EmpFamilyDetails> findByEmp_id_EmpId(@Param("empId") int empId);
     
     @Query("SELECT f FROM EmpFamilyDetails f WHERE f.emp_id = :employee")
     List<EmpFamilyDetails> findByEmployeeEntity(@Param("employee") Employee employee);
- 
-
-
 }

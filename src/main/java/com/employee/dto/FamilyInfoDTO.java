@@ -40,8 +40,8 @@ public class FamilyInfoDTO {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class FamilyMemberDTO {
-		private String firstName;
-		private String lastName;
+		private String fullName;
+		private Long adhaarNo;
 		private Boolean isLate; // Late checkbox
 		private Integer occupationId; // Optional - if provided, will look up occupation_name from Occupation table
 		private String occupation; // Occupation name - used if occupationId is not provided or not found

@@ -848,7 +848,7 @@ public class EmployeeBasicInfoTabService {
             empDetails.setRelation_id(null);
         }
 
-        empDetails.setAdhaar_no(basicInfo.getAadharNum());
+        empDetails.setAdhaar_no(basicInfo.getAdhaarNo());
         empDetails.setPancard_no(basicInfo.getPancardNum());
         empDetails.setAdhaar_enrolment_no(basicInfo.getAadharEnrolmentNum());
         empDetails.setPassout_year(0);
@@ -1136,8 +1136,10 @@ public class EmployeeBasicInfoTabService {
         EmpFamilyDetails familyMember = new EmpFamilyDetails();
 
         familyMember.setEmp_id(employee);
-        familyMember.setFirst_name(memberDTO.getFirstName());
-        familyMember.setLast_name(memberDTO.getLastName());
+//        familyMember.setFirst_name(memberDTO.getFirstName());
+//        familyMember.setLast_name(memberDTO.getLastName());
+        familyMember.setFullName(memberDTO.getFullName());
+        familyMember.setAdhaarNo(memberDTO.getAdhaarNo());
         familyMember.setIs_late(memberDTO.getIsLate() != null && memberDTO.getIsLate() ? "Y" : "N");
         
         // Handle occupation: If occupationId is provided, check if it exists in Occupation table
@@ -1293,8 +1295,10 @@ public class EmployeeBasicInfoTabService {
      * Helper: Update Family fields
      */
     private void updateFamilyFields(EmpFamilyDetails target, EmpFamilyDetails source) {
-        target.setFirst_name(source.getFirst_name());
-        target.setLast_name(source.getLast_name());
+//        target.setFirst_name(source.getFirst_name());
+//        target.setLast_name(source.getLast_name());
+    	target.setFullName(source.getFullName());
+    	target.setAdhaarNo(source.getAdhaarNo());
         target.setDate_of_birth(source.getDate_of_birth());
         target.setGender_id(source.getGender_id());
         target.setRelation_id(source.getRelation_id());
@@ -1685,8 +1689,8 @@ public class EmployeeBasicInfoTabService {
 
         // Validate Aadhaar Number format IF provided (optional field)
         // CHANGED: Validation now supports Long type (removed .trim())
-        if (basicInfo.getAadharNum() != null && basicInfo.getAadharNum() > 0) {
-            String aadhar = String.valueOf(basicInfo.getAadharNum());
+        if (basicInfo.getAdhaarNo() != null && basicInfo.getAdhaarNo() > 0) {
+            String aadhar = String.valueOf(basicInfo.getAdhaarNo());
             
             // Layer 1: Format validation - must be exactly 12 numeric digits
             if (!aadhar.matches("^[0-9]{12}$")) {
@@ -1770,47 +1774,58 @@ public class EmployeeBasicInfoTabService {
         // Validate Family Group Photo document type if provided
         if (familyInfo.getFamilyGroupPhotoPath() != null && !familyInfo.getFamilyGroupPhotoPath().trim().isEmpty()) {
             empDocTypeRepository.findByDocNameAndIsActive("Family Group Photo", 1)
-                    .orElseThrow(() -> new ResourceNotFoundException("Family Group Photo document type not found or inactive in document type master. Please ensure the document type is configured and active."));
+                    .orElseThrow(() -> new ResourceNotFoundException("Family Group Photo document type not found or inactive."));
         }
 
         if (familyInfo.getFamilyMembers() != null) {
             for (FamilyInfoDTO.FamilyMemberDTO member : familyInfo.getFamilyMembers()) {
                 if (member == null) continue;
 
+                // 1. Validate Full Name (New Check)
+                if (member.getFullName() == null || member.getFullName().trim().isEmpty()) {
+                    throw new ResourceNotFoundException("Full Name is required for all family members.");
+                }
+
+                // 2. Relation Validation
                 if (member.getRelationId() == null) {
-                    throw new ResourceNotFoundException("Relation ID is required for family member: " + member.getFirstName());
+                    throw new ResourceNotFoundException("Relation ID is required for family member: " + member.getFullName());
                 }
 
                 relationRepository.findById(member.getRelationId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Relation not found with ID: " + member.getRelationId() + " for family member: " + member.getFirstName()));
+                        .orElseThrow(() -> new ResourceNotFoundException("Relation not found with ID: " + member.getRelationId() + " for family member: " + member.getFullName()));
 
-                // Gender validation: For Father (relationId=1) and Mother (relationId=2), gender is auto-set by backend
+                // 3. Gender Validation: For Father (1) and Mother (2), gender is auto-set by backend
                 if (member.getRelationId() != 1 && member.getRelationId() != 2) {
                     if (member.getGenderId() == null) {
-                        throw new ResourceNotFoundException("Gender ID is required for family member: " + member.getFirstName() +
+                        throw new ResourceNotFoundException("Gender ID is required for family member: " + member.getFullName() +
                                 " (relationId: " + member.getRelationId() + "). Gender is only auto-set for Father and Mother.");
                     }
                     genderRepository.findById(member.getGenderId())
-                            .orElseThrow(() -> new ResourceNotFoundException("Gender not found with ID: " + member.getGenderId() + " for family member: " + member.getFirstName()));
+                            .orElseThrow(() -> new ResourceNotFoundException("Gender not found with ID: " + member.getGenderId() + " for family member: " + member.getFullName()));
                 }
 
+                // 4. Blood Group Validation
                 if (member.getBloodGroupId() == null) {
-                    throw new ResourceNotFoundException("Blood Group ID is required for family member: " + member.getFirstName());
+                    throw new ResourceNotFoundException("Blood Group ID is required for family member: " + member.getFullName());
                 }
                 bloodGroupRepository.findByIdAndIsActive(member.getBloodGroupId(), 1)
-                        .orElseThrow(() -> new ResourceNotFoundException("Active Blood Group not found with ID: " + member.getBloodGroupId() + " for family member: " + member.getFirstName()));
+                        .orElseThrow(() -> new ResourceNotFoundException("Active Blood Group not found with ID: " + member.getBloodGroupId() + " for family member: " + member.getFullName()));
 
+                // 5. Nationality Validation
                 if (member.getNationality() == null || member.getNationality().trim().isEmpty()) {
-                    throw new ResourceNotFoundException("Nationality is required for family member: " + member.getFirstName());
+                    throw new ResourceNotFoundException("Nationality is required for family member: " + member.getFullName());
                 }
 
+                // 6. Occupation Validation
                 if (member.getOccupation() == null || member.getOccupation().trim().isEmpty()) {
-                    throw new ResourceNotFoundException("Occupation is required for family member: " + member.getFirstName());
+                    throw new ResourceNotFoundException("Occupation is required for family member: " + member.getFullName());
+                }
+                if (member.getAdhaarNo() == null) {
+                    throw new ResourceNotFoundException("Aadhaar Number is required for family member: " + member.getFullName());
                 }
             }
         }
     }
-
     /**
      * Helper: Validate Previous Employer Info DTO
      */

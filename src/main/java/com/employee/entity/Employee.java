@@ -3,6 +3,8 @@ package com.employee.entity;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import org.hibernate.validator.constraints.Range;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -168,8 +170,9 @@ public class Employee {
 	@JoinColumn(name = "building_id", nullable = true)
 	private Building building_id; // Optional - can be null
 
-	@Column(name = "age")
-	private Integer age; // Optional - nullable
+	@Range(min = 18, max = 58, message = "Age must be between 18 and 58")
+    @Column(name = "age")
+    private Integer age;// Optional - nullable
 
 	@Column(name = "ssc_no")
 	private Long ssc_no; // SSC number - moved from EmpDocuments to Employee table

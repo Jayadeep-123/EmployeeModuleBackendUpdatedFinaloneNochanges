@@ -52,8 +52,8 @@ public class BasicInfoDTO {
 	private String adhaarName;
 	private Date dateOfBirth;
 	
-	@JsonAlias({"aadhaarNum", "aadharNumber", "aadhaarNumber", "aadharNo", "aadhaarNo"})
-	private Long aadharNum;
+	@JsonAlias({"aadhaarNum", "aadharNumber", "aadhaarNumber", "aadharNo", "aadhaarNo", "adhaarNo"})
+	private Long adhaarNo;
 	
 	@JsonAlias({"aadharEnrolmentNum", "aadhaarEnrolmentNum", "aadharEnrolmentNo", "aadhaarEnrolmentNo"})
 	private String aadharEnrolmentNum; // Aadhaar Enrollment No
