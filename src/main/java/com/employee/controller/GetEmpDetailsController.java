@@ -123,10 +123,10 @@ public class GetEmpDetailsController {
 	    }
 	    
 
-	    @GetMapping("/skillTestResult/{tempPayrollId}")
-	    public List<SkillTestResultDTO> getSkillTestResults(@PathVariable String tempPayrollId) {
-	        return getEmpDetailsService.getSkillTestResultsByPayrollId(tempPayrollId);
-	    }
+//	    @GetMapping("/skillTestResult/{tempPayrollId}")
+//	    public List<SkillTestResultDTO> getSkillTestResults(@PathVariable String tempPayrollId) {
+//	        return getEmpDetailsService.getSkillTestResultsByPayrollId(tempPayrollId);
+//	    }
 	    
 	    @GetMapping("/agreement-cheque/{tempPayrollId}")
 	    public EmployeeAgreementDetailsDto getAgreementChequeInfo(@PathVariable String tempPayrollId) {

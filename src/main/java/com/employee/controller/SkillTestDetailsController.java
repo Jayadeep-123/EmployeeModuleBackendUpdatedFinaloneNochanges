@@ -28,22 +28,17 @@ public class SkillTestDetailsController {
     @Autowired
     private SkillTestDetailsService skillTestDetailsService;
 
-    /**
-     * Saves new skill test details.
-     * The emp_id (e.g., recruiter's ID) is passed in the URL.
-     * The new candidate's details are passed in the request body.
-     */
     @PostMapping("/save/{emp_id}")
-    public ResponseEntity<String> saveSkillTestDetails(@Valid
+    public ResponseEntity<SkillTestDetails> saveSkillTestDetails(@Valid
             @RequestBody SkillTestDetailsDto dto,
             @PathVariable("emp_id") int emp_id) {
         
         log.info("Attempting to save skill test details for emp_id: {}", emp_id);
         
-        // Call the service method, passing both the DTO and the emp_id
-        String savedDetails = skillTestDetailsService.saveSkillTestDetails(dto, emp_id);
+        // Call the service method (now returns the actual Entity object)
+        SkillTestDetails savedDetails = skillTestDetailsService.saveSkillTestDetails(dto, emp_id);
         
-        // Return the saved entity with a "201 Created" HTTP status
+        // Return the saved entity object (JSON) with a "201 Created" HTTP status
         return new ResponseEntity<>(savedDetails, HttpStatus.CREATED);
     }
 }

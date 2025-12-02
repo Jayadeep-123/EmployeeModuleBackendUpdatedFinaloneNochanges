@@ -25,7 +25,7 @@ public class EmpExperienceDetails {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int emp_exp_detl_id;
 	
-	@Column(name = "pre_organigation_name", nullable = false)
+	@Column(name = "pre_organization_name", nullable = false)
 	private String pre_organigation_name; // Required NOT NULL
 	
 	@Column(name = "date_of_join", nullable = false)

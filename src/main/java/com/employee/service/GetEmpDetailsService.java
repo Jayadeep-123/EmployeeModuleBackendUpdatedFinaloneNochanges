@@ -251,9 +251,9 @@ public class GetEmpDetailsService {
 	                .orElse(null);
 	    }
 	    
-	    public List<SkillTestResultDTO> getSkillTestResultsByPayrollId(String tempPayrollId) {
-	        return skillTestResultRepository.findSkillTestDetailsByPayrollId(tempPayrollId);
-	    }
+//	    public List<SkillTestResultDTO> getSkillTestResultsByPayrollId(String tempPayrollId) {
+//	        return skillTestResultRepository.findSkillTestDetailsByPayrollId(tempPayrollId);
+//	    }
 
 //	    @Transactional(readOnly = true)
 	    public EmployeeAgreementDetailsDto getAgreementChequeInfo(String tempPayrollId) {

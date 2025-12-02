@@ -1136,10 +1136,11 @@ public class EmployeeBasicInfoTabService {
         EmpFamilyDetails familyMember = new EmpFamilyDetails();
 
         familyMember.setEmp_id(employee);
-//        familyMember.setFirst_name(memberDTO.getFirstName());
-//        familyMember.setLast_name(memberDTO.getLastName());
+        
+        // Full Name and Aadhaar (Updated)
         familyMember.setFullName(memberDTO.getFullName());
         familyMember.setAdhaarNo(memberDTO.getAdhaarNo());
+        
         familyMember.setIs_late(memberDTO.getIsLate() != null && memberDTO.getIsLate() ? "Y" : "N");
         
         // Handle occupation: If occupationId is provided, check if it exists in Occupation table
@@ -1295,10 +1296,10 @@ public class EmployeeBasicInfoTabService {
      * Helper: Update Family fields
      */
     private void updateFamilyFields(EmpFamilyDetails target, EmpFamilyDetails source) {
-//        target.setFirst_name(source.getFirst_name());
-//        target.setLast_name(source.getLast_name());
+        // Full Name and Aadhaar (Updated)
     	target.setFullName(source.getFullName());
     	target.setAdhaarNo(source.getAdhaarNo());
+    	
         target.setDate_of_birth(source.getDate_of_birth());
         target.setGender_id(source.getGender_id());
         target.setRelation_id(source.getRelation_id());

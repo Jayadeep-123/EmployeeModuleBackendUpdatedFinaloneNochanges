@@ -1,10 +1,6 @@
 package com.employee.service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,29 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.employee.dto.AddressInfoDTO;
-import com.employee.dto.AgreementInfoDTO;
-import com.employee.dto.BankInfoDTO;
 import com.employee.dto.BasicInfoDTO;
-import com.employee.dto.CategoryInfoDTO;
-import com.employee.dto.DocumentDTO;
-import com.employee.dto.FamilyInfoDTO;
-import com.employee.dto.PreviousEmployerInfoDTO;
-import com.employee.dto.QualificationDTO;
-import com.employee.entity.BankDetails;
 import com.employee.entity.Building;
-import com.employee.entity.EmpChequeDetails;
 import com.employee.entity.EmpDetails;
-import com.employee.entity.EmpDocuments;
-import com.employee.entity.EmpExperienceDetails;
-import com.employee.entity.EmpFamilyDetails;
-import com.employee.entity.EmpPaymentType;
 import com.employee.entity.EmpPfDetails;
-import com.employee.entity.EmpQualification;
-import com.employee.entity.EmpaddressInfo;
 import com.employee.entity.Employee;
 import com.employee.entity.EmployeeCheckListStatus;
-import com.employee.entity.OrgBank;
-import com.employee.entity.OrgBankBranch;
 import com.employee.exception.ResourceNotFoundException;
 import com.employee.repository.BankDetailsRepository;
 import com.employee.repository.BloodGroupRepository;
@@ -130,7 +109,6 @@ public class EmployeeEntityPreparationService {
         }
         return empPfDetails;
     }
-
 
     public Employee prepareEmployeeEntity(BasicInfoDTO basicInfo) {
         if (basicInfo == null) throw new ResourceNotFoundException("Basic Info is required");
@@ -296,6 +274,8 @@ public class EmployeeEntityPreparationService {
             empDetails.setCreated_by(createdBy);
             empDetails.setCreated_date(new Timestamp(System.currentTimeMillis()));
         }
+        
+        // Correctly mapped fields
         if (basicInfo.getFatherName() != null) {
             empDetails.setFatherName(basicInfo.getFatherName().trim());
         }
@@ -304,8 +284,6 @@ public class EmployeeEntityPreparationService {
         }
         return empDetails;
     }
-
-
 
     public void updateEmployeeEntity(Employee employee, BasicInfoDTO basicInfo) {
         if (basicInfo == null) return;
@@ -329,7 +307,6 @@ public class EmployeeEntityPreparationService {
             if (building.getIsActive() != 1) throw new ResourceNotFoundException("Building is not active");
             employee.setBuilding_id(building);
         } else {
-            // Clear building_id if buildingId is null or 0
             employee.setBuilding_id(null);
         }
         if (basicInfo.getGenderId() != null) {
@@ -420,6 +397,7 @@ public class EmployeeEntityPreparationService {
         }
     }
 
+    // === UPDATED METHOD: Added FatherName and UAN setters ===
     public void updateEmpDetailsFields(EmpDetails target, EmpDetails source) {
         target.setAdhaar_name(source.getAdhaar_name());
         target.setDate_of_birth(source.getDate_of_birth());
@@ -429,6 +407,12 @@ public class EmployeeEntityPreparationService {
         target.setAdhaar_no(source.getAdhaar_no());
         target.setPancard_no(source.getPancard_no());
         target.setAdhaar_enrolment_no(source.getAdhaar_enrolment_no());
+        
+        // --- Added Lines ---
+        target.setFatherName(source.getFatherName());
+        target.setUanNo(source.getUanNo());
+        // -------------------
+        
         target.setBloodGroup_id(source.getBloodGroup_id());
         target.setCaste_id(source.getCaste_id());
         target.setReligion_id(source.getReligion_id());
@@ -437,6 +421,7 @@ public class EmployeeEntityPreparationService {
         target.setStatus(source.getStatus());
     }
 
+    // === UPDATED METHOD: Added FatherName and UAN setters ===
     public void updateEmpDetailsFieldsExceptEmail(EmpDetails target, EmpDetails source) {
         target.setAdhaar_name(source.getAdhaar_name());
         target.setDate_of_birth(source.getDate_of_birth());
@@ -445,6 +430,12 @@ public class EmployeeEntityPreparationService {
         target.setAdhaar_no(source.getAdhaar_no());
         target.setPancard_no(source.getPancard_no());
         target.setAdhaar_enrolment_no(source.getAdhaar_enrolment_no());
+        
+        // --- Added Lines ---
+        target.setFatherName(source.getFatherName());
+        target.setUanNo(source.getUanNo());
+        // -------------------
+        
         target.setBloodGroup_id(source.getBloodGroup_id());
         target.setCaste_id(source.getCaste_id());
         target.setReligion_id(source.getReligion_id());
